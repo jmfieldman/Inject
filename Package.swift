@@ -3,16 +3,16 @@
 import PackageDescription
 
 let package = Package(
-  name: "Injection",
+  name: "Inject",
   platforms: [.macOS(.v12), .iOS(.v16)],
   products: [
-    .library(name: "Injection", targets: ["Injection"]),
+    .library(name: "Inject", targets: ["Inject"]),
   ],
   dependencies: [
   ],
   targets: [
     .target(
-      name: "Injection",
+      name: "Inject",
       dependencies: []
     ),
   ]

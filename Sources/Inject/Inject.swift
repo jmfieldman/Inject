@@ -1,11 +1,11 @@
 //
-//  Injection.swift
+//  Inject.swift
 //  Copyright © 2024 Jason Fieldman.
 //
 
 import Foundation
 
-public enum Injection {
+public enum Inject {
   /// This map contains the specified singleton generator functions
   /// for Injectable objects.
   private(set) static var injectableResolutionMap: [ObjectIdentifier: () -> Any] = [:]
