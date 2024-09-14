@@ -5,6 +5,16 @@
 
 import Foundation
 
+/// All Injectables must have an empty initializer. Your protocol declaration
+/// must inherit from this.
+public protocol Injectable {
+  init()
+}
+
+/// This is a convenient function to allow for let ivars:
+///   `let myObj: SomeType = inject()`
+public func inject<T>(_ type: T.Type) -> T { Inject.resolve(type) }
+
 public enum Inject {
   /// This map contains the specified singleton generator functions
   /// for Injectable objects.
