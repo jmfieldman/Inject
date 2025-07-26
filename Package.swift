@@ -10,12 +10,21 @@ let package = Package(
     .library(name: "Inject", targets: ["Inject"]),
   ],
   dependencies: [
+    .package(url: "https://github.com/apple/swift-syntax.git", from: "601.0.0"),
   ],
   targets: [
     .target(
       name: "Inject",
       dependencies: [
+        "InjectPlugin"
       ]
+    ),
+    .macro(
+        name: "InjectPlugin",
+        dependencies: [
+            .product(name: "SwiftSyntaxMacros", package: "swift-syntax"),
+            .product(name: "SwiftCompilerPlugin", package: "swift-syntax")
+        ]
     ),
     .testTarget(
         name: "InjectTests",

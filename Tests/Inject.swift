@@ -29,6 +29,15 @@ final class InjectTests: XCTestCase {
         let i: ProtoC = Inject()
         XCTAssertNotNil(i)
     }
+    
+    func testBasicResolutionMacro() {
+        InjectionManager.register(ProtoA.self) { ClassA() }
+        InjectionManager.register(ProtoB.self) { ClassB() }
+        InjectionManager.register(ProtoC.self) { ClassC() }
+
+        #Inject(ProtoC.self)        
+        XCTAssertNotNil(protoc)
+    }
 
     func testNoResolutionBlock() {
         InjectionManager.register(ProtoA.self) { ClassA() }

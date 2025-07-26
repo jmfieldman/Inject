@@ -5,6 +5,9 @@
 
 import Foundation
 
+@freestanding(declaration, names: arbitrary)
+public macro Inject(_ type: Any.Type) = #externalMacro(module: "InjectPlugin", type: "InjectMacro")
+
 public enum InjectionResolutionError: Error {
     case cycleDetected(stack: [String], keyName: String)
     case noResolutionBlock(type: String)
