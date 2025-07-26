@@ -17,5 +17,12 @@ let package = Package(
       dependencies: [
       ]
     ),
+    .testTarget(
+        name: "InjectTests",
+        dependencies: [
+            "Inject",
+        ],
+        path: "Tests"
+    ),
   ]
 )
