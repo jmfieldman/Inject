@@ -6,6 +6,7 @@ build/
 DerivedData/
 Scratch/
 
+.vscode
 
 # DependencyMagnet
 
