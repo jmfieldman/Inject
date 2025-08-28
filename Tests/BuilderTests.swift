@@ -1,3 +1,7 @@
+//
+//  BuilderTests.swift
+//  Copyright © 2025 Jason Fieldman.
+//
 
 import Combine
 @testable import Inject
@@ -7,33 +11,33 @@ import XCTest
 class BuilderTests: XCTestCase {
     func testGenericClass() {
         BuilderManager.register(GenericClassBuilder.self) { builder in
-            return GenericClassImpl(builder: builder as! GenericClassBuilder)
+            GenericClassImpl(builder: builder as! GenericClassBuilder)
         }
 
         let instance: any GenericClass = GenericClassBuilder(someParam: 42).build()
         XCTAssertTrue(instance is GenericClassImpl)
     }
-    
+
     func testViewControllerClass() {
         BuilderManager.register(ViewControllerClassBuilder.self) { builder in
-            return ViewControllerClassImpl(builder: builder as! ViewControllerClassBuilder)
+            ViewControllerClassImpl(builder: builder as! ViewControllerClassBuilder)
         }
 
         let instance: any ViewControllerClass = ViewControllerClassBuilder(someParam: 42).build()
         XCTAssertTrue(instance is ViewControllerClassImpl)
-        
+
         // Should be able to use normal view controller methods
         let _ = instance.navigationController
         let _ = UINavigationController(rootViewController: instance)
     }
-    
+
     func testFunctionBased() {
         BuilderManager.register(MyPublisherBuilder.self) { builder in
-            return MyPublisherBuilderImpl(builder: builder as! MyPublisherBuilder)
+            MyPublisherBuilderImpl(builder: builder as! MyPublisherBuilder)
         }
 
         let publisher: AnyPublisher<Int, Never> = MyPublisherBuilder(someParam: 42).build()
-        
+
         var result: Int?
         _ = publisher.sink { result = $0 }
         XCTAssertEqual(result, 42)
@@ -41,6 +45,7 @@ class BuilderTests: XCTestCase {
 }
 
 // MARK: GenericClass
+
 // A generic NSObject test class
 
 // Public API
@@ -61,6 +66,7 @@ private class GenericClassImpl: NSObject, GenericClass {
 }
 
 // MARK: ViewControllerClass
+
 // A generic UIViewController-based test class
 
 // Public API
@@ -78,13 +84,15 @@ private class ViewControllerClassImpl: UIViewController, ViewControllerClass {
     required init(builder: ViewControllerClassBuilder) {
         super.init(nibName: nil, bundle: nil)
     }
-    
+
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 }
 
 // MARK: FunctionBased
+
 // Using a generic protected function to perform arbitrary operations
 // and return an arbitrary type during the build process.
 
@@ -105,5 +113,5 @@ public struct MyPublisherBuilder: Builder {
 // same -- both return the corresponding `BuildResult`
 
 func MyPublisherBuilderImpl(builder: MyPublisherBuilder) -> AnyPublisher<Int, Never> {
-    return Just(builder.someParam).eraseToAnyPublisher()
+    Just(builder.someParam).eraseToAnyPublisher()
 }

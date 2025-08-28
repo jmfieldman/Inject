@@ -47,17 +47,17 @@ import Foundation
 /// Applied to any data model that we want to be opaquely built
 /// into an associated result object.
 public protocol Builder {
-  /// This is the associated result type that will be output from
-  /// the build operation.
-  associatedtype BuildResult
+    /// This is the associated result type that will be output from
+    /// the build operation.
+    associatedtype BuildResult
 }
 
 /// A public extension on Builder to return the instantiated
 /// instance of `BuildResult` for this model.
 public extension Builder {
-  func build() -> Self.BuildResult {
-      BuilderManager.__buildHelper(self)
-  }
+    func build() -> Self.BuildResult {
+        BuilderManager.__buildHelper(self)
+    }
 }
 
 // MARK: - Buildable
@@ -66,30 +66,30 @@ public extension Builder {
 /// a `Builder`.  This enforces that the implementation has an initializer
 /// capable of taking in the builder model.
 public protocol Buildable {
-  associatedtype InputBuilder: Builder
-  init(builder: InputBuilder)
+    associatedtype InputBuilder: Builder
+    init(builder: InputBuilder)
 }
 
 // MARK: - BuilderManager
 
 public enum BuilderManager {
-  private static var buildLookup: [ObjectIdentifier: (Any) -> Any] = [:]
-  private static let buildLock = NSLock()
-   
+    private static var buildLookup: [ObjectIdentifier: (Any) -> Any] = [:]
+    private static let buildLock = NSLock()
+
     public static func register<B: Builder>(_ type: B.Type, _ resolutionFunction: @escaping (Any) -> B.BuildResult) {
         buildLock.withLock {
             buildLookup[ObjectIdentifier(type)] = resolutionFunction
         }
     }
 
-  /// A private helper function that extracts the resolutionFunction
-  /// from the lookup and creates the instance.
-  fileprivate static func __buildHelper<B: Builder>(_ builder: B) -> B.BuildResult {
-    guard let resolutionFunction = buildLock.withLock({
-      self.buildLookup[ObjectIdentifier(B.self)]
-    }) else {
-      fatalError("Attempted to build unregistered model: \(B.self)")
+    /// A private helper function that extracts the resolutionFunction
+    /// from the lookup and creates the instance.
+    fileprivate static func __buildHelper<B: Builder>(_ builder: B) -> B.BuildResult {
+        guard let resolutionFunction = buildLock.withLock({
+            self.buildLookup[ObjectIdentifier(B.self)]
+        }) else {
+            fatalError("Attempted to build unregistered model: \(B.self)")
+        }
+        return resolutionFunction(builder) as! B.BuildResult
     }
-    return resolutionFunction(builder) as! B.BuildResult
-  }
 }

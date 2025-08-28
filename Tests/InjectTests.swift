@@ -20,7 +20,7 @@ final class InjectTests: XCTestCase {
         let i = Inject(ProtoC.self)
         XCTAssertNotNil(i)
     }
-    
+
     func testBasicResolutionImplicit() {
         InjectionManager.register(ProtoA.self) { ClassA() }
         InjectionManager.register(ProtoB.self) { ClassB() }
