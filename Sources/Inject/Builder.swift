@@ -76,10 +76,17 @@ public enum BuilderManager {
     private static var buildLookup: [ObjectIdentifier: (Any) -> Any] = [:]
     private static let buildLock = NSLock()
 
+    /// Register a resolution function for the specified type.
     public static func register<B: Builder>(_ type: B.Type, _ resolutionFunction: @escaping (Any) -> B.BuildResult) {
         buildLock.withLock {
             buildLookup[ObjectIdentifier(type)] = resolutionFunction
         }
+    }
+    
+    /// Register a resolution function for the specified type, without using internal locks.
+    /// Acceptable for batch registration as part of the app launch process.
+    public static func unsafeRegister<B: Builder>(_ type: B.Type, _ resolutionFunction: @escaping (Any) -> B.BuildResult) {
+        buildLookup[ObjectIdentifier(type)] = resolutionFunction
     }
 
     /// A private helper function that extracts the resolutionFunction

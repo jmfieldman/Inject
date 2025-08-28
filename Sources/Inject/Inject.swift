@@ -59,6 +59,12 @@ public enum InjectionManager {
             injectableResolutionMap[ObjectIdentifier(type)] = resolutionFunction
         }
     }
+    
+    /// Register a resolution function for the specified type, without using internal locks.
+    /// Acceptable for batch registration as part of the app launch process.
+    public static func unsafeRegister<T>(_ type: T.Type, _ resolutionFunction: @escaping () -> T) {
+        injectableResolutionMap[ObjectIdentifier(type)] = resolutionFunction
+    }
 
     /// Resolve the specified type into its singleton instance contained
     /// in the current injectable container. Optionally performs resolution
