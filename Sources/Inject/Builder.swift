@@ -70,6 +70,17 @@ public protocol Buildable {
     init(builder: InputBuilder)
 }
 
+/// Apply to a protocol that you want to enforce buildability from
+/// a `Builder`.  This enforces that the implementation has an initializer
+/// capable of taking in the builder model.
+///
+/// Use this version for implementations that are traditionally main-actor
+/// isolated (such as a UIViewController)
+@MainActor public protocol MainActorBuildable {
+    associatedtype InputBuilder: Builder
+    init(builder: InputBuilder)
+}
+
 // MARK: - BuilderManager
 
 public enum BuilderManager {
